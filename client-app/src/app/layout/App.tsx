@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Header, Icon, List } from 'semantic-ui-react';
-import './App.css';
 
 class App extends Component {
   state = {
