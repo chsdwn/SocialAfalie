@@ -9,6 +9,11 @@ import { Header, Icon, List, Container } from 'semantic-ui-react';
 
 const App = () => {
   const [activities, setActivities] = useState<IActivity[]>([]);
+  const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(null);
+
+  const handleSelectActivity = (id: string) => {
+    setSelectedActivity(activities.filter(a => a.id === id)[0]);
+  }
 
   // Works as same as ComponentDidMount, runs once when component start
   useEffect(() => {
@@ -22,7 +27,10 @@ const App = () => {
     <Fragment>
       <NavBar />
       <Container style={{ marginTop: '7em' }}>
-        <ActivityDashboard activities={activities} />
+        <ActivityDashboard
+          activities={activities}
+          selectedActivity={selectedActivity!}
+          selectActivity={handleSelectActivity} />
       </Container>
     </Fragment>
   );
