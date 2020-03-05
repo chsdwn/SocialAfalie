@@ -28,6 +28,8 @@ namespace API
                     
                     // Checks if database created if it isn't, creates one.
                     context.Database.Migrate();
+
+                    Seed.SeedData(context);
                 }
                 catch(Exception e)
                 {
