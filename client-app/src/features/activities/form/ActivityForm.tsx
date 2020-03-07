@@ -20,7 +20,6 @@ export const ActivityForm: React.FC<RouteComponentProps<
     createActivity,
     editActivity,
     submitting,
-    cancelFormOpen,
     activity: initialFormState,
     loadActivity,
     clearActivity
@@ -57,7 +56,6 @@ export const ActivityForm: React.FC<RouteComponentProps<
   const handleInputChange = (
     event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    // event.currentTarget.name, event.currentTarget.value
     const { name, value } = event.currentTarget;
     setActivity({ ...activity, [name]: value });
   };
@@ -127,7 +125,7 @@ export const ActivityForm: React.FC<RouteComponentProps<
           content="Submit"
         />
         <Button
-          onClick={cancelFormOpen}
+          onClick={() => history.push('/activities')}
           floated="right"
           type="button"
           content="Cancel"

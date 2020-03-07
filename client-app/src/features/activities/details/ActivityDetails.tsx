@@ -17,14 +17,11 @@ export const ActivityDetails: React.FC<RouteComponentProps<
   const activityStore = useContext(ActivityStore);
   const {
     activity,
-    openEditForm,
-    cancelSelectedActivity,
     loadActivity,
     loadingInitial
   } = activityStore;
 
   useEffect(() => {
-    console.log(match.params.id);
     loadActivity(match.params.id);
   }, [loadActivity, match.params.id]);
 
