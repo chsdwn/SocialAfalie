@@ -13,14 +13,21 @@ class ActivityStore {
   @observable submitting = false;
   @observable target = '';
 
-  @computed get activitiesByDate(): IActivity[] {
-    return Array
-      .from(
-        this.activityRegistry.values()
-      ).sort(
-        (a1, a2) => Date.parse(a1.date) - Date.parse(a2.date)
-      );
+  @computed get activitiesByDate() {
+    return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()));
   };
+
+  groupActivitiesByDate(activities: IActivity[]) {
+    const sortedActivities = activities.sort(
+      (a1, a2) => Date.parse(a1.date) - Date.parse(a2.date)
+    );
+
+    return Object.entries(sortedActivities.reduce((activities, activity) => {
+      const date = activity.date.split('T')[0];
+      activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+      return activities;
+    }, {} as {[key: string]: IActivity[]}));
+  }
 
   @action selectActivity = (id: string) => {
     this.activity = this.activityRegistry.get(id);
