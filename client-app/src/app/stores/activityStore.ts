@@ -19,14 +19,14 @@ class ActivityStore {
 
   groupActivitiesByDate(activities: IActivity[]) {
     const sortedActivities = activities.sort(
-      (a1, a2) => Date.parse(a1.date) - Date.parse(a2.date)
+      (a1, a2) => a1.date.getTime() - a2.date.getTime()
     );
 
     return Object.entries(sortedActivities.reduce((activities, activity) => {
-      const date = activity.date.split('T')[0];
+      const date = activity.date.toISOString().split('T')[0];
       activities[date] = activities[date] ? [...activities[date], activity] : [activity];
       return activities;
-    }, {} as {[key: string]: IActivity[]}));
+    }, {} as { [key: string]: IActivity[] }));
   }
 
   @action selectActivity = (id: string) => {
@@ -40,7 +40,7 @@ class ActivityStore {
       const activities = await agent.Activities.list();
       runInAction('loading activities', () => {
         activities.forEach(activity => {
-          activity.date = activity.date.split('.')[0];
+          activity.date = new Date(activity.date);
           this.activityRegistry.set(activity.id, activity);
         });
       });
@@ -58,14 +58,17 @@ class ActivityStore {
 
     if (activity) {
       this.activity = activity;
+      return activity;
     } else {
       this.loadingInitial = true;
 
       try {
         activity = await agent.Activities.details(id);
         runInAction('getting activity', () => {
+          activity.date = new Date(activity.date);
           this.activity = activity;
         });
+        return activity;
       } catch (error) {
         console.log(error);
       } finally {
