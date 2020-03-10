@@ -8,5 +8,6 @@
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>07123151-b25e-4471-a682-2aefd432b07d</UserSecretsId>
   </PropertyGroup>
 </Project>

@@ -17,7 +17,6 @@ namespace API.Controllers
             return await Mediator.Send(new List.Query());
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> Details(Guid id)
         {
