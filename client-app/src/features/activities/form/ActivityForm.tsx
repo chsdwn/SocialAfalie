@@ -1,22 +1,41 @@
 import React, { useState, useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { RouteComponentProps } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import ActivityStore from "../../../app/stores/activityStore";
 import { Form as FinalForm, Field } from "react-final-form";
 import { category } from "../../../app/common/options/CategoryOptions";
+import {
+  combineValidators,
+  isRequired,
+  composeValidators,
+  hasLengthGreaterThan
+} from "revalidate";
 
 import { DateInput } from "../../../app/common/form/DateInput";
 import { SelectInput } from "../../../app/common/form/SelectInput";
 import { TextAreaInput } from "../../../app/common/form/TextAreaInput";
 import { TextInput } from "../../../app/common/form/TextInput";
 
-import {
-  IActivityFormValues,
-  ActivityFormValues
-} from "../../../app/models/activity";
+import { ActivityFormValues } from "../../../app/models/activity";
 
 import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import { combineDateAndTime } from "../../../app/common/util/util";
+
+const validate = combineValidators({
+  title: isRequired({ message: "The event title is required" }),
+  description: composeValidators(
+    isRequired("Description"),
+    hasLengthGreaterThan(4)({
+      message: "Description needs to be at least 5 characters."
+    })
+  )(),
+  category: isRequired("Category"),
+  date: isRequired("Date"),
+  time: isRequired("Time"),
+  city: isRequired("City"),
+  venue: isRequired("Venue")
+});
 
 interface DetailParams {
   id: string;
@@ -27,8 +46,9 @@ export const ActivityForm: React.FC<RouteComponentProps<
 >> = observer(({ match, history }) => {
   const activityStore = useContext(ActivityStore);
   const {
+    createActivity,
+    editActivity,
     submitting,
-    activity: initialFormState,
     loadActivity
   } = activityStore;
 
@@ -48,7 +68,16 @@ export const ActivityForm: React.FC<RouteComponentProps<
     const dateAndTime = combineDateAndTime(values.date, values.time);
     const { date, time, ...activity } = values;
     activity.date = dateAndTime;
-    console.log(activity);
+
+    if (!activity.id) {
+      let newActivity = {
+        ...activity,
+        id: uuid()
+      };
+      createActivity(newActivity);
+    } else {
+      editActivity(activity);
+    }
   };
 
   return (
@@ -56,9 +85,10 @@ export const ActivityForm: React.FC<RouteComponentProps<
       <Grid.Column width={10}>
         <Segment clearing>
           <FinalForm
+            validate={validate}
             initialValues={activity}
             onSubmit={handleFinalFormSubmit}
-            render={({ handleSubmit }) => (
+            render={({ handleSubmit, invalid, pristine }) => (
               <Form onSubmit={handleSubmit} loading={loading}>
                 <Field
                   name="title"
@@ -114,10 +144,14 @@ export const ActivityForm: React.FC<RouteComponentProps<
                   positive
                   type="submit"
                   content="Submit"
-                  disabled={loading}
+                  disabled={loading || invalid || pristine}
                 />
                 <Button
-                  onClick={() => history.push("/activities")}
+                  onClick={
+                    activity.id
+                      ? () => history.push(`/activities/${activity.id}`)
+                      : () => history.push("/activities")
+                  }
                   floated="right"
                   type="button"
                   content="Cancel"

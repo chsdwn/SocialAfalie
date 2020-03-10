@@ -1,8 +1,10 @@
 import { createContext, SyntheticEvent } from 'react';
 import { observable, action, computed, configure, runInAction } from 'mobx';
 import agent from '../api/agent';
+import { history } from '../..';
 
 import { IActivity } from './../models/activity';
+import { toast } from 'react-toastify';
 
 configure({ 'enforceActions': 'always' });
 
@@ -67,6 +69,7 @@ class ActivityStore {
         runInAction('getting activity', () => {
           activity.date = new Date(activity.date);
           this.activity = activity;
+          this.activityRegistry.set(activity.id, activity);
         });
         return activity;
       } catch (error) {
@@ -95,8 +98,10 @@ class ActivityStore {
       runInAction('creating activity', () => {
         this.activityRegistry.set(activity.id, activity);
       });
+      history.push(`/activities/${activity.id}`);
     } catch (error) {
-      console.log(error);
+      toast.error("Problem sumitting data");
+      console.log(error.response);
     } finally {
       runInAction('reset submitting', () => {
         this.submitting = false;
@@ -113,6 +118,7 @@ class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
         this.activity = activity;
       });
+      history.push(`/activities/${activity.id}`);
     } catch (error) {
       console.log(error);
     } finally {
