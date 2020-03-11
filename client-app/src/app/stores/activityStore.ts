@@ -1,13 +1,11 @@
-import { createContext, SyntheticEvent } from 'react';
-import { observable, action, computed, configure, runInAction } from 'mobx';
+import { SyntheticEvent } from 'react';
+import { observable, action, computed, runInAction } from 'mobx';
 import agent from '../api/agent';
 import { history } from '../..';
 import { RootStore } from './rootStore';
 
 import { IActivity } from './../models/activity';
 import { toast } from 'react-toastify';
-
-configure({ 'enforceActions': 'always' });
 
 export default class ActivityStore {
   rootStore: RootStore;
