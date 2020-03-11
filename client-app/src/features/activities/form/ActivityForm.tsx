@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { RouteComponentProps } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import ActivityStore from "../../../app/stores/activityStore";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 import { Form as FinalForm, Field } from "react-final-form";
 import { category } from "../../../app/common/options/CategoryOptions";
 import {
@@ -44,13 +44,13 @@ interface DetailParams {
 export const ActivityForm: React.FC<RouteComponentProps<
   DetailParams
 >> = observer(({ match, history }) => {
-  const activityStore = useContext(ActivityStore);
+  const rootStore = useContext(RootStoreContext);
   const {
     createActivity,
     editActivity,
     submitting,
     loadActivity
-  } = activityStore;
+  } = rootStore.activityStore;
 
   const [activity, setActivity] = useState(new ActivityFormValues());
   const [loading, setLoading] = useState(false);
