@@ -20,7 +20,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ActivityDto>> Details(Guid id)
         {
-            return await Mediator.Send(new Details.Query{Id = id});
+            return await Mediator.Send(new Details.Query{ Id = id });
         }
 
         [HttpPost]
@@ -40,6 +40,12 @@ namespace API.Controllers
         public async Task<ActionResult<Unit>> Delete(Guid id)
         {
             return await Mediator.Send(new Delete.Command{ Id = id });
+        }
+
+        [HttpPost("{id}/attend")]
+        public async Task<ActionResult<Unit>> Attend(Guid id)
+        {
+            return await Mediator.Send(new Attend.Command{ Id = id });
         }
     }
 }
