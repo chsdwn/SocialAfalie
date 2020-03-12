@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using API.Middleware;
 using Application.Activities;
 using Application.Interfaces;
+using AutoMapper;
 using Domain;
 using FluentValidation.AspNetCore;
 using Infrastructure.Security;
@@ -42,6 +44,7 @@ namespace API
         {
             services.AddDbContext<DataContext>(opt => 
             {
+                opt.UseLazyLoadingProxies(); // Lazy loads virtual columns.
                 opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
 
@@ -57,6 +60,8 @@ namespace API
             });
 
             services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddAutoMapper(typeof(List.Handler));
+
 
             services.AddControllers(opt => 
                 {
@@ -68,6 +73,10 @@ namespace API
                 })
                 .AddFluentValidation(config =>
                     config.RegisterValidatorsFromAssemblyContaining<Create>()
+                )
+                .AddNewtonsoftJson(opt => 
+                    opt.SerializerSettings.ReferenceLoopHandling = 
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
             
             var builder = services.AddDefaultIdentity<AppUser>();
