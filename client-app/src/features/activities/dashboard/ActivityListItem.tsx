@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { format } from "date-fns";
 
+import { ActivityListItemAttendees } from "./ActivityListItemAttendees";
+
 import { IActivity } from "../../../app/models/activity";
 
 import { Item, Button, Segment, Icon } from "semantic-ui-react";
@@ -26,7 +28,9 @@ export const ActivityListItem: React.FC<{ activity: IActivity }> = observer(
           <Icon name="clock" /> {format(activity.date, "h:mm")}
           <Icon name="marker" /> {activity.venue}, {activity.city}
         </Segment>
-        <Segment secondary>Attendees will go here</Segment>
+        <Segment secondary>
+          <ActivityListItemAttendees attendees={activity.attendees} />
+        </Segment>
         <Segment clearing>
           <span>{activity.description}</span>
           <Button
