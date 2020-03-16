@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using Domain;
 
@@ -20,6 +21,12 @@ namespace Application.Activities
                 .ForMember(
                     dest => dest.DisplayName,
                     member => member.MapFrom(u => u.AppUser.DisplayName)
+                )
+                .ForMember(
+                    dest => dest.Image,
+                    member => member.MapFrom(
+                        u => u.AppUser.Photos.FirstOrDefault(p => p.IsMain).Url
+                    )
                 );
         }
     }
