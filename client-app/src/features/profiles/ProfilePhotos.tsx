@@ -12,10 +12,17 @@ export const ProfilePhotos = observer(() => {
     profile,
     isCurrentUser,
     uploadPhoto,
-    uploadingPhoto
+    uploadingPhoto,
+    setMainPhoto,
+    deletePhoto,
+    loading
   } = rootStore.profileStore;
 
   const [addPhotoMode, setAddPhotoMode] = useState(true);
+  const [target, setTarget] = useState<string | undefined>(undefined);
+  const [deleteTarget, setDeleteTarget] = useState<string | undefined>(
+    undefined
+  );
 
   const handleUploadImage = (photo: Blob) => {
     uploadPhoto(photo).then(() => setAddPhotoMode(false));
@@ -49,8 +56,30 @@ export const ProfilePhotos = observer(() => {
                     <Image src={photo.url} />
                     {isCurrentUser && (
                       <Button.Group fluid widths={2}>
-                        <Button basic positive content="Main" />
-                        <Button basic negative icon="trash" />
+                        <Button
+                          name={photo.id}
+                          onClick={e => {
+                            setMainPhoto(photo);
+                            setTarget(e.currentTarget.name);
+                          }}
+                          disabled={photo.isMain}
+                          basic
+                          positive
+                          content="Main"
+                          loading={loading && target === photo.id}
+                        />
+                        <Button
+                          name={photo.id}
+                          onClick={e => {
+                            deletePhoto(photo);
+                            setDeleteTarget(e.currentTarget.name);
+                          }}
+                          loading={loading && deleteTarget === photo.id}
+                          disabled={photo.isMain}
+                          basic
+                          negative
+                          icon="trash"
+                        />
                       </Button.Group>
                     )}
                   </Card>
