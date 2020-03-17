@@ -16,7 +16,7 @@ export const ActivityList = observer(() => {
       {activitiesByDate.map(([group, activities]) => (
         <Fragment key={group}>
           <Label size="large" color="blue">
-            {format(group, "eeee do MMMM")}
+            {format(parseInt(group), "eeee do MMMM")}
           </Label>
           <Item.Group divided>
             {activities.map(activity => (

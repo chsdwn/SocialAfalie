@@ -14,7 +14,6 @@ import { HomePage } from "../../features/home/HomePage";
 import { ActivityDashboard } from "../../features/activities/dashboard/ActivityDashboard";
 import { ActivityDetails } from "../../features/activities/details/ActivityDetails";
 import { ActivityForm } from "../../features/activities/form/ActivityForm";
-import { LoginForm } from "../../features/user/LoginForm";
 import { LoadingComponent } from "./LoadingComponent";
 import { ProfilePage } from "../../features/profiles/ProfilePage";
 import { ModalContainer } from "../common/modals/ModalContainer";
