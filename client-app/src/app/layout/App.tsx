@@ -16,6 +16,7 @@ import { ActivityDetails } from "../../features/activities/details/ActivityDetai
 import { ActivityForm } from "../../features/activities/form/ActivityForm";
 import { LoginForm } from "../../features/user/LoginForm";
 import { LoadingComponent } from "./LoadingComponent";
+import { ProfilePage } from "../../features/profiles/ProfilePage";
 import { ModalContainer } from "../common/modals/ModalContainer";
 import { NotFound } from "./NotFound";
 
@@ -28,13 +29,13 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
 
   useEffect(() => {
     if (token) {
-      getUser().finally(() => setAppLoaded())
+      getUser().finally(() => setAppLoaded());
     } else {
-      setAppLoaded()
+      setAppLoaded();
     }
   }, [token, getUser, setAppLoaded]);
 
-  if (!appLoaded) return <LoadingComponent content="Loading app..." />
+  if (!appLoaded) return <LoadingComponent content="Loading app..." />;
 
   return (
     <Fragment>
@@ -47,7 +48,8 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
           <Fragment>
             <NavBar />
             <Container style={{ marginTop: "7em" }}>
-              <Switch> {/* Only one component can be loaded same time */}
+              {/* Only one component can be loaded same time */}
+              <Switch>
                 <Route exact path="/activities" component={ActivityDashboard} />
                 <Route path="/activities/:id" component={ActivityDetails} />
                 <Route
@@ -55,7 +57,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                   path={["/createActivity", "/manage/:id"]}
                   component={ActivityForm}
                 />
-                <Route path="/login" component={LoginForm} />
+                <Route path="/profile/:username" component={ProfilePage} />
                 <Route component={NotFound} />
               </Switch>
             </Container>
