@@ -38,7 +38,9 @@ export default class ActivityStore {
       .catch(error => console.log(error));
 
     this.hubConnection.on("ReceiveComment", comment => {
-      this.activity!.comments.push(comment);
+      runInAction("push comment", () => {
+        this.activity!.comments.push(comment);
+      });
     })
   }
 
