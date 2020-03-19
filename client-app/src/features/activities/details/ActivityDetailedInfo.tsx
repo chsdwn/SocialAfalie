@@ -27,8 +27,8 @@ export const ActivityDetailedInfo: React.FC<{ activity: IActivity }> = observer(
             </Grid.Column>
             <Grid.Column width={15}>
               <span>
-                {format(activity.date, "eeee do MMMM")} at{" "}
-                {format(activity.date, "h:mm")}
+                {format(new Date(activity.date), "eeee do MMMM")} at{" "}
+                {format(new Date(activity.date), "h:mm")}
               </span>
             </Grid.Column>
           </Grid>

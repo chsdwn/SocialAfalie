@@ -45,7 +45,7 @@ export const ActivityDetailedHeader: React.FC<{
                   content={activity.title}
                   style={{ color: "white" }}
                 />
-                <p>{format(activity.date, "eeee do MMMM")}</p>
+                <p>{format(new Date(activity.date), "eeee do MMMM")}</p>
                 <p>
                   Hosted by{" "}
                   <Link to={`/profile/${host.username}`}>
