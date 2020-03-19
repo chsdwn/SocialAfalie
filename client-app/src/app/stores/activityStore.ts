@@ -5,6 +5,7 @@ import agent from '../api/agent';
 import { RootStore } from './rootStore';
 import { setActivityProps, createAttendee } from './../common/util/util';
 import { toast } from 'react-toastify';
+import { HubConnection, HubConnectionBuilder, LogLevel } from "@aspnet/signalr";
 
 import { IActivity } from './../models/activity';
 
@@ -21,6 +22,29 @@ export default class ActivityStore {
   @observable submitting = false;
   @observable target = '';
   @observable loading = false;
+  @observable.ref hubConnection: HubConnection | null = null;
+
+  @action createHubConnection = () => {
+    this.hubConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5000/chat", {
+        accessTokenFactory: () => this.rootStore.commonStore.token!
+      })
+      .configureLogging(LogLevel.Information)
+      .build();
+
+    this.hubConnection
+      .start()
+      .then(() => console.log(this.hubConnection?.state))
+      .catch(error => console.log(error));
+
+    this.hubConnection.on("ReceiveComment", comment => {
+      this.activity!.comments.push(comment);
+    })
+  }
+
+  @action stopHubConnection = () => {
+    this.hubConnection!.stop();
+  }
 
   @computed get activitiesByDate() {
     return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()));
@@ -108,7 +132,7 @@ export default class ActivityStore {
 
       let attendees = [];
       attendees.push(attendee);
-      
+
       activity.attendees = attendees;
       activity.isHost = true;
 
