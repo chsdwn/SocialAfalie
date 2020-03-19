@@ -4,7 +4,6 @@ import { RootStoreContext } from "../../app/stores/rootStore";
 import { ProfileEditForm } from "./ProfileEditForm";
 
 import { Tab, Grid, Header, Button } from "semantic-ui-react";
-import { observer } from "mobx-react-lite";
 
 export const ProfileDescription = () => {
   const rootStore = useContext(RootStoreContext);
